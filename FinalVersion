@@ -1,1 +1,241 @@
+package LibraryManagement;
 
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.Color;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.DefaultListModel;
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+public class LibrarySystem extends JFrame {
+
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JTextField txtSearch;
+    private DefaultListModel<String> listModel;
+    private JList<String> bookJList;
+    private ArrayList<String> bookList;
+    private JLabel lblTotal;
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    LibrarySystem frame = new LibrarySystem();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public LibrarySystem() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 671, 551);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+
+        bookList = new ArrayList<>();
+        
+        bookList.add("Harry Potter");
+        bookList.add("Anatomy and Physiology");
+        bookList.add("TimeKeeper");
+        bookList.add("Titanic");
+        bookList.add("Lord of the Rings");
+        bookList.add("English Text Book");
+        bookList.add("Algebra Mathematics");
+        bookList.add("The Little Prince");
+        bookList.add("Hercules");
+        bookList.add("Peter Pan");
+        bookList.add("Pride and Prejudice");
+
+        JPanel panel = new JPanel();
+        panel.setBounds(0, 0, 660, 87);
+        panel.setBackground(new Color(255, 255, 128));
+        contentPane.add(panel);
+        panel.setLayout(null);
+
+        JLabel lblNewLabel_1 = new JLabel("Search: ");
+        lblNewLabel_1.setBounds(147, 52, 71, 24);
+        panel.add(lblNewLabel_1);
+        lblNewLabel_1.setFont(new Font("Georgia", Font.PLAIN, 20));
+
+        JLabel lblNewLabel = new JLabel("Library System Management");
+        lblNewLabel.setBounds(137, 11, 383, 35);
+        panel.add(lblNewLabel);
+        lblNewLabel.setFont(new Font("Georgia", Font.PLAIN, 30));
+
+        txtSearch = new JTextField();
+        txtSearch.setBounds(215, 52, 286, 24);
+        panel.add(txtSearch);
+        txtSearch.setColumns(10);
+
+        txtSearch.getDocument().addDocumentListener(new DocumentListener() {
+            
+            public void insertUpdate(DocumentEvent e) {
+                handleSearch();
+            }
+
+            
+            public void removeUpdate(DocumentEvent e) {
+                handleSearch();
+            }
+
+            
+            public void changedUpdate(DocumentEvent e) {
+                handleSearch();
+            }
+
+            private void handleSearch() {
+                String searchText = txtSearch.getText();
+                if (searchText.isEmpty()) {
+                    updateBookList(); // This part will show all books if search text is empty
+                }
+            }
+        });
+
+        JButton btnSearch = new JButton("Search by Index"); // This part will be the search button of the System
+        btnSearch.setBounds(515, 52, 130, 24);
+        panel.add(btnSearch);
+
+        btnSearch.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                performSearchByIndex();
+            }
+        });
+
+        JPanel panel_2 = new JPanel();
+        panel_2.setBounds(0, 394, 660, 118);
+        panel_2.setBackground(new Color(255, 255, 128));
+        contentPane.add(panel_2);
+        panel_2.setLayout(null);
+
+        lblTotal = new JLabel("Total: " + bookList.size());
+        lblTotal.setFont(new Font("Tahoma", Font.PLAIN, 28));
+        lblTotal.setBounds(10, 64, 132, 43);
+        panel_2.add(lblTotal);
+
+        listModel = new DefaultListModel<>();
+        bookJList = new JList<>(listModel);
+        bookJList.setBounds(0, 115, 700, 300);
+        contentPane.add(bookJList);
+
+        updateBookList();
+
+        JButton btnNewButton = new JButton("ADD");
+        btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String newBook = JOptionPane.showInputDialog(LibrarySystem.this, "Enter a new book to add:");
+
+                if (newBook != null && !newBook.trim().isEmpty()) {
+                    int insertChoice = JOptionPane.showConfirmDialog(LibrarySystem.this, "Would you like to insert the book at a specific index?", "Insert Choice", JOptionPane.YES_NO_OPTION);
+
+                    if (insertChoice == JOptionPane.YES_OPTION) {
+                        String indexStr = JOptionPane.showInputDialog(LibrarySystem.this, "Enter the index to insert the book:");
+
+                        try {
+                            int index = Integer.parseInt(indexStr);
+                            if (index >= 0 && index <= bookList.size()) {
+                                bookList.add(index, newBook);
+                                updateBookList();
+                            } else {
+                                JOptionPane.showMessageDialog(LibrarySystem.this, "Index out of range.", "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(LibrarySystem.this, "Invalid index entered. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        bookList.add(newBook);
+                        updateBookList();
+                    }
+                }
+            }
+        });
+
+        btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 28));
+        btnNewButton.setBounds(10, 24, 303, 38);
+        panel_2.add(btnNewButton);
+
+        JButton btnRemove = new JButton("REMOVE");
+        btnRemove.setFont(new Font("Tahoma", Font.PLAIN, 28));
+        btnRemove.setBounds(336, 24, 303, 38);
+        panel_2.add(btnRemove);
+
+        btnRemove.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int removeChoice = JOptionPane.showConfirmDialog(LibrarySystem.this, "Would you like to remove a book?", "Remove Book", JOptionPane.YES_NO_OPTION);
+
+                if (removeChoice == JOptionPane.YES_OPTION) {
+                    String indexStr = JOptionPane.showInputDialog(LibrarySystem.this, "Enter the index of the book to remove:");
+
+                    try {
+                        int removeIndex = Integer.parseInt(indexStr);
+
+                        if (removeIndex >= 0 && removeIndex < bookList.size()) {
+                            bookList.remove(removeIndex);
+                            updateBookList();
+                        } else {
+                            JOptionPane.showMessageDialog(LibrarySystem.this, "Index out of range.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(LibrarySystem.this, "Invalid index entered. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+
+        JPanel panel_3 = new JPanel();
+        panel_3.setBackground(new Color(192, 192, 192));
+        panel_3.setBounds(0, 85, 655, 30);
+        contentPane.add(panel_3);
+
+        JLabel lblNewLabel_1_1 = new JLabel("Book Lists");
+        panel_3.add(lblNewLabel_1_1);
+        lblNewLabel_1_1.setFont(new Font("Georgia", Font.PLAIN, 20));
+    }
+
+    private void updateBookList() {
+        listModel.clear();
+        for (int i = 0; i < bookList.size(); i++) {
+            String displayText = i + ": " + bookList.get(i);
+            listModel.addElement(displayText);
+        }
+        
+        updateTotalLabel();
+    }
+
+    private void performSearchByIndex() {
+        try {
+            int index = Integer.parseInt(txtSearch.getText());
+            if (index >= 0 && index < bookList.size()) {
+                listModel.clear();
+                String book = bookList.get(index);
+                listModel.addElement(index + ": " + book);
+            } else {
+                JOptionPane.showMessageDialog(this, "Index out of range.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid index entered. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void updateTotalLabel() {
+        if (lblTotal != null) {
+            lblTotal.setText("Total: " + bookList.size());
+        }
+    }
+}
