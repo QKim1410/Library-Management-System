@@ -207,7 +207,6 @@ public class LibrarySystem extends JFrame {
         panel_3.add(lblNewLabel_1_1);
         lblNewLabel_1_1.setFont(new Font("Georgia", Font.PLAIN, 20));
     }
-
     private void updateBookList() {
         listModel.clear();
         for (int i = 0; i < bookList.size(); i++) {
@@ -217,7 +216,7 @@ public class LibrarySystem extends JFrame {
         
         updateTotalLabel();
     }
-
+//Sarmiento's contribution 219 - 234
     private void performSearchByIndex() {
         try {
             int index = Integer.parseInt(txtSearch.getText());
