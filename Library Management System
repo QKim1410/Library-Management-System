@@ -165,7 +165,7 @@ public class LibrarySystem extends JFrame {
                 }
             }
         });
-
+//Barlintangco's contribution 168 - 199 (Programmed the remove function, modification of arraylist, help in designing ui)
         btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 28));
         btnNewButton.setBounds(10, 24, 303, 38);
         panel_2.add(btnNewButton);
