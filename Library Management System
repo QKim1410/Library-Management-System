@@ -160,7 +160,7 @@ public class LibrarySystem extends JFrame {
                         }
                     } else {
                         bookList.add(newBook);
-                        updateBookList();
+                        updateBookList(); 
                     }
                 }
             }
@@ -207,14 +207,14 @@ public class LibrarySystem extends JFrame {
         panel_3.add(lblNewLabel_1_1);
         lblNewLabel_1_1.setFont(new Font("Georgia", Font.PLAIN, 20));
     }
-    private void updateBookList() {
+    private void updateBookList() { //jontilano Contribution
         listModel.clear();
         for (int i = 0; i < bookList.size(); i++) {
             String displayText = i + ": " + bookList.get(i);
-            listModel.addElement(displayText);
+            listModel.addElement(displayText); //Jontilano Contribution
         }
         
-        updateTotalLabel();
+        updateTotalLabel(); //jontilano Contribution
     }
 //Sarmiento's contribution 219 - 234
     private void performSearchByIndex() {
@@ -231,7 +231,7 @@ public class LibrarySystem extends JFrame {
             JOptionPane.showMessageDialog(this, "Invalid index entered. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+//Jontilano's Contribution 234-241
     private void updateTotalLabel() {
         if (lblTotal != null) {
             lblTotal.setText("Total: " + bookList.size());
